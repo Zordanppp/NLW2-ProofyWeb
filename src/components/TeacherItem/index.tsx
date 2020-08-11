@@ -4,37 +4,43 @@ import whatsappIcon from "../../assets/images/icons/whatsapp.svg";
 import { TeacherItemProps } from "./types";
 
 import "./styles.css";
+import api from "../../services/api";
 
-const TeacherItem: React.FC<TeacherItemProps> = () => {
+const TeacherItem: React.FC<TeacherItemProps> = ({
+  id,
+  name,
+  avatar,
+  bio,
+  cost,
+  subject,
+  whatsapp,
+}) => {
+  function createNewConnection() {
+    api.post("connections", {
+      user_id: id,
+    });
+  }
   return (
     <article className="teacher-item">
       <header>
-        <img
-          src="https://lh3.googleusercontent.com/ogw/ADGmqu9uP_2n0dZPhhx4rjPx0CICXQrfLldBXwqYN0C0=s83-c-mo"
-          alt="Daniel Zordan"
-        />
+        <img src={avatar} alt={name} />
         <div>
-          <strong>Daniel Zordan</strong>
-          <span>ReactJS</span>
+          <strong>{name}</strong>
+          <span>{subject}</span>
         </div>
       </header>
 
-      <p>
-        Esse aqui é o primeiro parágrafo e é isso ai mesmo.
-        <br /> <br />
-        Esse aqui é o segundo parágrado e ele precisa ser maior porque é a
-        descrição do card com muitas coisas sobre o cara que da no card.
-      </p>
+      <p>{bio} </p>
 
       <footer>
         <p>
           Preço/hora
-          <strong>R$ 60,00</strong>
+          <strong>R$ {cost}</strong>
         </p>
-        <button type="button">
+        <a onClick={createNewConnection} href={`https://wa.me/${whatsapp}`}>
           <img src={whatsappIcon} alt="whatsapp" />
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   );
