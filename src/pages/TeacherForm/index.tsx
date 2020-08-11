@@ -1,41 +1,42 @@
-import React, { useState, FormEvent } from "react";
+/* eslint-disable no-alert */
+import React, { useState, FormEvent } from 'react';
 
-import { useHistory } from "react-router-dom";
+import warningIcon from 'assets/images/icons/warning.svg';
+import { useHistory } from 'react-router-dom';
 
-import PageHeader from "../../components/PageHeader";
-import Input from "../../components/Input";
-import TextArea from "../../components/TextArea";
-import Select from "../../components/Select";
+import Input from 'components/Input';
+import PageHeader from 'components/PageHeader';
+import Select from 'components/Select';
+import TextArea from 'components/TextArea';
 
-import warningIcon from "../../assets/images/icons/warning.svg";
+import api from 'services/api';
 
-import "./styles.css";
-import api from "../../services/api";
+import './styles.css';
 
-function TeacherForm() {
+const TeacherForm: React.FC = () => {
   const history = useHistory();
 
-  const [name, setName] = useState("");
-  const [avatar, setAvatar] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
-  const [bio, setBio] = useState("");
+  const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
+  const [bio, setBio] = useState('');
 
-  const [subject, setSubject] = useState("");
-  const [cost, setCost] = useState("");
+  const [subject, setSubject] = useState('');
+  const [cost, setCost] = useState('');
 
   const [scheduleItems, setScheduleItems] = useState([
-    { week_day: 0, from: "", to: "" },
+    { week_day: 0, from: '', to: '' },
   ]);
 
-  function addNewScheduleItem() {
-    setScheduleItems([...scheduleItems, { week_day: 0, from: "", to: "" }]);
+  function addNewScheduleItem(): void {
+    setScheduleItems([...scheduleItems, { week_day: 0, from: '', to: '' }]);
   }
 
   function setScheduleItemValue(
     position: number,
     field: string,
-    value: string
-  ) {
+    value: string,
+  ): void {
     const newScheduleItems = scheduleItems.map((scheduleItem, index) => {
       if (index === position) {
         return { ...scheduleItem, [field]: value };
@@ -47,11 +48,11 @@ function TeacherForm() {
     setScheduleItems(newScheduleItems);
   }
 
-  async function handleCreateClass(e: FormEvent) {
+  async function handleCreateClass(e: FormEvent): Promise<void> {
     e.preventDefault();
 
     try {
-      await api.post("classes", {
+      await api.post('classes', {
         name,
         avatar,
         whatsapp,
@@ -61,12 +62,11 @@ function TeacherForm() {
         schedule: scheduleItems,
       });
 
-      alert("Cadastro realizado com sucesso");
+      alert('Cadastro realizado com sucesso');
 
-      history.push("/");
+      history.push('/');
     } catch (err) {
-      console.log("err", err);
-      alert("Erro no cadastro");
+      alert('Erro no cadastro');
     }
   }
 
@@ -126,16 +126,16 @@ function TeacherForm() {
                 setSubject(e.target.value);
               }}
               options={[
-                { value: "Artes", label: "Artes" },
-                { value: "Biologia", label: "Biologia" },
-                { value: "Ciências", label: "Ciências" },
-                { value: "Matemática", label: "Artes" },
-                { value: "Geografia", label: "Geografia" },
-                { value: "Física", label: "Física" },
-                { value: "História", label: "História" },
-                { value: "Português", label: "Português" },
-                { value: "Química", label: "Química" },
-                { value: "Educação Física", label: "Educação Física" },
+                { value: 'Artes', label: 'Artes' },
+                { value: 'Biologia', label: 'Biologia' },
+                { value: 'Ciências', label: 'Ciências' },
+                { value: 'Matemática', label: 'Artes' },
+                { value: 'Geografia', label: 'Geografia' },
+                { value: 'Física', label: 'Física' },
+                { value: 'História', label: 'História' },
+                { value: 'Português', label: 'Português' },
+                { value: 'Química', label: 'Química' },
+                { value: 'Educação Física', label: 'Educação Física' },
               ]}
             />
             <Input
@@ -156,48 +156,47 @@ function TeacherForm() {
               </button>
             </legend>
 
-            {scheduleItems.map((scheduleItem, index) => {
-              return (
-                <div key={index} className="schedule-item">
-                  <Select
-                    label="Dia da semana"
-                    name="week_day"
-                    value={scheduleItem.week_day}
-                    onChange={(e) =>
-                      setScheduleItemValue(index, "week_day", e.target.value)
-                    }
-                    options={[
-                      { value: "0", label: "Domingo" },
-                      { value: "1", label: "Segunda-feira" },
-                      { value: "2", label: "Terça-feira" },
-                      { value: "3", label: "Quarta-feira" },
-                      { value: "4", label: "Quinta-feira" },
-                      { value: "5", label: "Sexta-feira" },
-                      { value: "6", label: "Sábado" },
-                    ]}
-                  />
+            {scheduleItems.map((scheduleItem, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <div key={index} className="schedule-item">
+                <Select
+                  label="Dia da semana"
+                  name="week_day"
+                  value={scheduleItem.week_day}
+                  onChange={(e) =>
+                    setScheduleItemValue(index, 'week_day', e.target.value)
+                  }
+                  options={[
+                    { value: '0', label: 'Domingo' },
+                    { value: '1', label: 'Segunda-feira' },
+                    { value: '2', label: 'Terça-feira' },
+                    { value: '3', label: 'Quarta-feira' },
+                    { value: '4', label: 'Quinta-feira' },
+                    { value: '5', label: 'Sexta-feira' },
+                    { value: '6', label: 'Sábado' },
+                  ]}
+                />
 
-                  <Input
-                    name="from"
-                    label="Das"
-                    type="time"
-                    value={scheduleItem.from}
-                    onChange={(e) =>
-                      setScheduleItemValue(index, "from", e.target.value)
-                    }
-                  />
-                  <Input
-                    name="to"
-                    label="Até"
-                    type="time"
-                    value={scheduleItem.to}
-                    onChange={(e) =>
-                      setScheduleItemValue(index, "to", e.target.value)
-                    }
-                  />
-                </div>
-              );
-            })}
+                <Input
+                  name="from"
+                  label="Das"
+                  type="time"
+                  value={scheduleItem.from}
+                  onChange={(e) =>
+                    setScheduleItemValue(index, 'from', e.target.value)
+                  }
+                />
+                <Input
+                  name="to"
+                  label="Até"
+                  type="time"
+                  value={scheduleItem.to}
+                  onChange={(e) =>
+                    setScheduleItemValue(index, 'to', e.target.value)
+                  }
+                />
+              </div>
+            ))}
           </fieldset>
 
           <footer>
@@ -212,6 +211,6 @@ function TeacherForm() {
       </main>
     </div>
   );
-}
+};
 
 export default TeacherForm;

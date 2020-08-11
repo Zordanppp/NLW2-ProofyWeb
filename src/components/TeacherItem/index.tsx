@@ -1,10 +1,12 @@
-import React from "react";
+import React from 'react';
 
-import whatsappIcon from "../../assets/images/icons/whatsapp.svg";
-import { TeacherItemProps } from "./types";
+import whatsappIcon from 'assets/images/icons/whatsapp.svg';
 
-import "./styles.css";
-import api from "../../services/api";
+import api from 'services/api';
+
+import { TeacherItemProps } from './types';
+
+import './styles.css';
 
 const TeacherItem: React.FC<TeacherItemProps> = ({
   id,
@@ -15,8 +17,8 @@ const TeacherItem: React.FC<TeacherItemProps> = ({
   subject,
   whatsapp,
 }) => {
-  function createNewConnection() {
-    api.post("connections", {
+  async function createNewConnection(): Promise<void> {
+    await api.post('connections', {
       user_id: id,
     });
   }
@@ -35,7 +37,10 @@ const TeacherItem: React.FC<TeacherItemProps> = ({
       <footer>
         <p>
           Preço/hora
-          <strong>R$ {cost}</strong>
+          <strong>
+            R$
+            {cost}
+          </strong>
         </p>
         <a onClick={createNewConnection} href={`https://wa.me/${whatsapp}`}>
           <img src={whatsappIcon} alt="whatsapp" />
